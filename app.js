@@ -15,13 +15,15 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 
-const fileStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'images');
-  },
-  filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + '-' + file.originalname);
-  }
+const uuidv4 = require('uuid/v4')
+ 
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'images');
+    },
+    filename: function(req, file, cb) {
+        cb(null, uuidv4())
+    }
 });
 
 const fileFilter = (req, file, cb) => {

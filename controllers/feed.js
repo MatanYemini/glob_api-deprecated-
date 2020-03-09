@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { validationResult } = require('express-validator/check');
-
+const User = require('../models/user');
 const Post = require('../models/post');
 
 exports.getPosts = (req, res, next) => {
@@ -46,21 +46,31 @@ exports.createPost = (req, res, next) => {
     error.statusCode = 422;
     throw error;
   }
-  const imageUrl = req.file.path;
+  const imageUrl = req.file.path.replace("\\" ,"/");
   const title = req.body.title;
   const content = req.body.content;
+  let creator;
   const post = new Post({
     title: title,
     content: content,
     imageUrl: imageUrl,
-    creator: { name: 'Maximilian' }
+    creator: req.userId // is saved in the middleware
   });
   post
     .save()
     .then(result => {
+      return User.findById(req.userId);
+    })
+    .then(user => {
+      creator = user;
+      user.posts.push(post);
+      user.save();
+    })
+    .then(result => {
       res.status(201).json({
         message: 'Post created successfully!',
-        post: result
+        post: post,
+        creator: { _id: creator._id, name: creator.name }
       });
     })
     .catch(err => {
@@ -102,7 +112,7 @@ exports.updatePost = (req, res, next) => {
   const content = req.body.content;
   let imageUrl = req.body.image;
   if (req.file) {
-    imageUrl = req.file.path;
+    imageUrl = req.file.path.replace("\\" ,"/");
   }
   if (!imageUrl) {
     const error = new Error('No file picked.');
