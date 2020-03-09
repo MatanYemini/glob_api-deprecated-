@@ -10,7 +10,7 @@ const ACCESS_ORIGIN = 'Access-Control-Allow-Origin';
 const ACCESS_METHODS = 'Access-Control-Allow-Methods';
 const ACCESS_HEADERS = 'Access-Control-Allow-Headers';
 
-
+const authRoutes = require('./routes/auth');
 const feedRoutes = require('./routes/feed');
 
 const app = express();
@@ -56,12 +56,14 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
+app.use('/auth', authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
   const message = error.message;
-  res.status(status).json({ message: message });
+  const data = error.data;
+  res.status(status).json({ message: message, data:data });
 });
 
 mongoose
