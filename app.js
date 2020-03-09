@@ -4,14 +4,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
+const feedRoutes = require('./routes/feed');
+const authRoutes = require('./routes/auth');
 
+// Consts
 const MONGODB_URI = 'mongodb+srv://Yemini:316386366@clusternode-gbgoy.mongodb.net/messages';
 const ACCESS_ORIGIN = 'Access-Control-Allow-Origin';
 const ACCESS_METHODS = 'Access-Control-Allow-Methods';
 const ACCESS_HEADERS = 'Access-Control-Allow-Headers';
 
-const feedRoutes = require('./routes/feed');
-const authRoutes = require('./routes/auth');
 
 const app = express();
 
@@ -41,7 +42,7 @@ const fileFilter = (req, file, cb) => {
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 app.use(
-  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
+  multer({ storage: storage, fileFilter: fileFilter }).single('image')
 );
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
