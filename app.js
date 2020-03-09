@@ -10,20 +10,18 @@ const ACCESS_ORIGIN = 'Access-Control-Allow-Origin';
 const ACCESS_METHODS = 'Access-Control-Allow-Methods';
 const ACCESS_HEADERS = 'Access-Control-Allow-Headers';
 
-const authRoutes = require('./routes/auth');
 const feedRoutes = require('./routes/feed');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 
-const uuidv4 = require('uuid/v4')
- 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'images');
-    },
-    filename: function(req, file, cb) {
-        cb(null, uuidv4())
-    }
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  }
 });
 
 const fileFilter = (req, file, cb) => {
@@ -41,7 +39,7 @@ const fileFilter = (req, file, cb) => {
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 app.use(
-  multer({ storage: storage, fileFilter: fileFilter }).single('image')
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
@@ -63,7 +61,7 @@ app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
   const data = error.data;
-  res.status(status).json({ message: message, data:data });
+  res.status(status).json({ message: message, data: data });
 });
 
 mongoose
