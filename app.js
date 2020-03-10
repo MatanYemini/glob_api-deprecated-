@@ -74,7 +74,7 @@ mongoose
   )
   .then(result => {
     const server = app.listen(8080);
-    const io = require('socket.io')(server); // setting up websocket connection
+    const io = require('./socket').init(server); // setting up websocket connection
     io.on('connection', socket => { 
       console.log('Client connected'); // will be reached in any new client connection
     });
