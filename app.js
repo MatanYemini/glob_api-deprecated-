@@ -7,6 +7,7 @@ const multer = require('multer');
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 
+
 // Consts
 const MONGODB_URI = 'mongodb+srv://Yemini:316386366@clusternode-gbgoy.mongodb.net/messages';
 const ACCESS_ORIGIN = 'Access-Control-Allow-Origin';
@@ -72,6 +73,10 @@ mongoose
     MONGODB_URI
   )
   .then(result => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('socket.io')(server); // setting up websocket connection
+    io.on('connection', socket => { 
+      console.log('Client connected'); // will be reached in any new client connection
+    });
   })
   .catch(err => console.log(err));
