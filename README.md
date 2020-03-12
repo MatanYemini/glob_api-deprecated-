@@ -2,14 +2,14 @@
 REST API project for private usage
 
 
-Includes:
-   Pagination
-   Extensive API
-   JWT 
-   Socket.io
-   Files Upload
-   Validtors
-   MongoDB connection (atlas)
+# Includes:
+  * Pagination
+  * Extensive API
+  * JWT 
+  * Socket.io
+  * Files Upload
+  * Validtors
+  * MongoDB connection (atlas)
 
 and much more fun.. 
 
