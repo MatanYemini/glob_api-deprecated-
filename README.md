@@ -1,5 +1,5 @@
 # glob_api
-REST API project for private usage
+REST API project for private usage - using cool things as mentioned in 'includes'
 
 
 # Includes:
